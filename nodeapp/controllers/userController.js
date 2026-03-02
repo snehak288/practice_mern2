@@ -1,0 +1,37 @@
+const User=require('../models/userModel')
+
+const addUser=async(req,res)=>{
+   const{userName,firstName,lastName,phone,email,password,role,dob}=req.body
+   try{
+    if(!userName||!firstName||!lastName||!phone||!password||!role){
+        return res.status(400).json({message:"Missing required fields"})
+    }
+    const existingUser=await User.findOne({$or:[{email,}]})
+    if(existingUser){
+        return res.status(409).json({message:"User already exists"})
+    }
+    await User.create(req.body)
+    res.status(201).json({message:"User successfully created"})
+   }
+   catch(error){
+    res.status(500).json({message:error.message})
+   }
+}
+
+const getUser=async(req,res)=>{
+    const{userName,password}=req.body
+    const user=await User.findOne({$or:[{userName,email}]})
+    if(!user){
+        return res.status(404).json({message:"Username or email doesnt exist"})
+    }
+    if(user.password!=password){
+        return res.status(401).json({message:"Invalid password"})
+    }
+    res.status(200).json({
+        userName:user.userName,
+        role:user.Role,
+        userId:user._id
+    })
+}
+
+module.exports={addUser,getUser};
