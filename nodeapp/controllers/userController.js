@@ -10,7 +10,8 @@ const addUser=async(req,res)=>{
     if(existingUser){
         return res.status(409).json({message:"User already exists"})
     }
-    await User.create(req.body)
+    const hashedpassword= await bcrypt.hash(password,10)
+    await User.create({...req.body,password:hashedpassword})
     res.status(201).json({message:"User successfully created"})
    }
    catch(error){
@@ -24,7 +25,8 @@ const getUser=async(req,res)=>{
     if(!user){
         return res.status(404).json({message:"Username or email doesnt exist"})
     }
-    if(user.password!=password){
+    const comparepassword=await bcrypt.compare(password,user.password)
+    if(!comparepassword){
         return res.status(401).json({message:"Invalid password"})
     }
     res.status(200).json({
