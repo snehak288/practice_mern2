@@ -3,6 +3,6 @@ const express=require("express")
 const userRouter= express.Router()
 
 userRouter.post('/signup',addUser);
-userRouter.get('/login',getUser)
+userRouter.post('/login',getUser)
 
 module.exports=userRouter;
