@@ -1,4 +1,5 @@
 const User=require('../models/userModel')
+const bcrypt = require('bcrypt')
 
 const addUser=async(req,res)=>{
    const{userName,firstName,lastName,phone,email,password,role,dob}=req.body
@@ -21,7 +22,7 @@ const addUser=async(req,res)=>{
 
 const getUser=async(req,res)=>{
     const{userName,password}=req.body
-    const user=await User.findOne({$or:[{userName,email}]})
+    const user=await User.findOne({userName})
     if(!user){
         return res.status(404).json({message:"Username or email doesnt exist"})
     }
@@ -31,7 +32,7 @@ const getUser=async(req,res)=>{
     }
     res.status(200).json({
         userName:user.userName,
-        role:user.Role,
+        role:user.role,
         userId:user._id
     })
 }
