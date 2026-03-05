@@ -1,7 +1,9 @@
 import React,{useState} from 'react'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
 
 function Signup() {
+    const navigate=useNavigate()
     // const[buttonText,setbuttonText]=useState(true);
     const[showPassword,setPassword]=useState(false);
     const[showconfirmPassword,setconfirmPassword]=useState(false);
@@ -45,7 +47,7 @@ function Signup() {
     if(!formData.role){
         validationErrors.role="Role is required"
     }
-
+   
     return  validationErrors
 }
 
@@ -75,6 +77,7 @@ function Signup() {
             email:formData.email,
             password:formData.password,
             role:roleArray})
+            navigate("/profile")
         // console.log(formData)
     }
   return (
