@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 function Login() { 
+    const navigate=useNavigate();
     const[formData,setFormData]=useState({
         userName:"",
         password:""
@@ -27,8 +29,24 @@ function Login() {
             return
         }
         setErrors({})
+        try{
         const response=await axios.post('http://localhost:8080/users/login',formData)
-        console.log(response.data)
+        console.log(response.status)
+        if (response.status==200){
+               navigate("/profile")
+        }
+        sessionStorage.setItem("userData",JSON.stringify({
+            userName:response.data.userName,
+            role:response.data.role,
+            userId:response.data.userId
+        }))
+        
+        
+        }
+        catch(error){
+            console.log(error.message)
+        }
+       
     }
   return (
     <div>
